@@ -1,7 +1,7 @@
 ﻿function AppDataModel() {
     var self = this;
     // Routes
-    self.userInfoUrl = "/api/Me";
+    self.userInfoUrl = "/api/Me2";
     self.siteUrl = "/";
 
     // Route operations
@@ -13,12 +13,5 @@
     // Data
     self.returnUrl = self.siteUrl;
 
-    // Data access operations
-    self.setAccessToken = function (accessToken) {
-        sessionStorage.setItem("accessToken", accessToken);
-    };
 
-    self.getAccessToken = function () {
-        return sessionStorage.getItem("accessToken");
-    };
 }

@@ -41,6 +41,15 @@ namespace WebApiTest
             bundles.Add(new StyleBundle("~/Content/css").Include(
                  "~/Content/bootstrap.css",
                  "~/Content/Site.css"));
+
+            // jquery datataables js files
+            bundles.Add(new ScriptBundle("~/bundles/datatables").Include(
+                        "~/Scripts/DataTables/jquery.dataTables.min.js",
+                        "~/Scripts/DataTables/dataTables.bootstrap.js"));
+
+            // jquery datatables css file
+            bundles.Add(new StyleBundle("~/Content/datatables").Include(
+                      "~/Content/DataTables/css/dataTables.bootstrap.css"));
         }
     }
 }
