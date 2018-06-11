@@ -27,6 +27,7 @@ namespace WebApiTest.Interfaces
         [Required]
         public string Position { get; set; }
         [Required]
+        [EmailAddress(ErrorMessage = "Invalid Email Address")]
         public string EMail { get; set; }
     }
 }

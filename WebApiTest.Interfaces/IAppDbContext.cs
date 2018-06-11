@@ -14,6 +14,6 @@ namespace WebApiTest.Interfaces
         Asset FindById(Guid id);
         Guid Add(Asset dto);
         void Update(Asset dto);
-        void Delete(Guid id);
+        bool Delete(Guid id);
     }
 }

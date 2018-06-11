@@ -1,0 +1,180 @@
+﻿<div class="row">
+    <div id='myModal' class='modal fade in'>
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div id='myModalContent'>
+                    <table class="table table-bordered table-condensed table-striped" id="tblemp">
+                        <tr>
+                            <td>FirstName</td>
+                            <td>
+                                <input type="text" id="FirstName" data-bind="value:FirstName" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>LastName</td>
+                            <td>
+                                <input type="text" id="LastName" data-bind="value:LastName" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>AssetDate</td>
+                            <td>
+                                <input type="date" id="AssetDate" data-bind="value:AssetDate" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>AssetNumber</td>
+                            <td>
+                                <input type="number" id="AssetNumber" data-bind="value:AssetNumber" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>OrgName</td>
+                            <td>
+                                <input type="text" id="OrgName" data-bind="value:OrgName" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Position</td>
+                            <td>
+                                <input type="text" id="Position" data-bind="value:Position" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>EMail</td>
+                            <td>
+                                <input type="text" id="EMail" data-bind="value:EMail" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <input type="button" value="Save" id="save"
+                                       data-bind="click: saveAsset" class="btn btn-success" />
+                            </td>
+                            <td></td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+
+    <div class="col-md-12">
+        <div class="panel panel-primary list-panel" id="list-panel">
+            <div class="panel-heading list-panel-heading">
+                <h1 class="panel-title list-panel-title">Assets</h1>
+            </div>
+            <div class="panel-body">
+                <table id="assets-data-table" class="table table-striped table-bordered"></table>
+            </div>
+        </div>
+
+    </div>
+
+    @section Scripts
+    {
+        <script type="text/javascript">
+
+            function doDelete(lnk) {
+
+            }
+
+
+            function AssetViewModel(data) {
+                var self = this;
+                self.saveAsset = function () {
+                    alert('qqqqqqqqqq');
+                }
+                // knockout mapping JSON data to view model
+                ko.mapping.fromJS(data, {}, self);
+            }
+
+            function doEdit(lnk) {
+                $.ajax({
+                    url: "http://localhost:59167/api/Get?id=" + lnk.getAttribute("data-id"),
+                    type: "GET"
+                })
+                    .done(function (data) {
+                        var vm = new AssetViewModel(data);
+                        ko.cleanNode(document.getElementById("myModal"));
+                        ko.applyBindings(vm, document.getElementById("myModal"));
+                        $('#myModal').modal({
+                            keyboard: true
+                        }, 'show');
+                    });
+
+            }
+
+            $(document).ready(function () {
+                var selected = [];
+                var table_companies = $('#assets-data-table').DataTable(
+                    {
+                        responsive: true,
+                        serverSide: true,
+                        processing: true,
+                        ajax: {
+                            url: "http://localhost:59167/api/GetResults",
+                            method: "POST"
+                        },
+                        columns: [
+                            { title: "FIO", "data": "FirstName", "searchable": true },
+                            { title: "AssetDate", "data": "AssetDate", "searchable": true },
+                            { title: "AssetNumber", "data": "AssetNumber", "searchable": true },
+                            { title: "OrgName", "data": "OrgName", "searchable": true },
+                            { title: "Position", "data": "Position", "searchable": true },
+                            { title: "EMail", "data": "EMail", "searchable": true },
+                                         /* EDIT */ {
+                                mRender: function (data, type, row) {
+                                    return '<a class="table-edit" data-id="' + row.AssetID + '" onclick="doEdit(this)">EDIT</a>'
+                                }
+                            },
+                                       /* DELETE */ {
+                                mRender: function (data, type, row) {
+                                    return '<a class="table-delete" data-id="' + row.AssetID + '" onclick="doDelete(this)">DELETE</a>'
+                                }
+                            }
+                        ],
+                        lengthMenu: [[10, 25, 50, 100], [10, 25, 50, 100]]
+                    });
+
+                // On page load: form validation
+                jQuery.validator.setDefaults({
+                    success: 'valid',
+                    rules: {
+                        fiscal_year: {
+                            required: true,
+                            min: 2000,
+                            max: 2025
+                        }
+                    },
+                    errorPlacement: function (error, element) {
+                        error.insertBefore(element);
+                    },
+                    highlight: function (element) {
+                        $(element).parent('.field_container').removeClass('valid').addClass('error');
+                    },
+                    unhighlight: function (element) {
+                        $(element).parent('.field_container').addClass('valid').removeClass('error');
+                    }
+                });
+            });
+
+        </script>
+    }
+
+
+</div>
+<div class="row">
+    <div class="col-sm-6">
+        <button type="button" id="addButton"
+                class="btn btn-primary"
+                onclick="addClick();">
+            Add Asset
+        </button>
+    </div>
+</div>
+
+

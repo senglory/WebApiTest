@@ -21,6 +21,8 @@ namespace WebApiTest.MSSQL
         public WebApiTestDB()
             : base("WebApiTestDB")
         {
+            Database.SetInitializer(new WebApiTestDBInitializer());
+
         }
 
         public Guid Add(Asset dto)
@@ -30,11 +32,14 @@ namespace WebApiTest.MSSQL
             return dto.AssetID;
         }
 
-        public void Delete(Guid id)
+        public bool Delete(Guid id)
         {
-            var dto = this.Assets.Find (id);
+            var dto = this.Assets.Find(id);
+            if (dto == null)
+                return false;
             this.Assets.Remove(dto);
             this.SaveChanges();
+            return true;
         }
 
         public Asset FindById(Guid id)
@@ -80,7 +85,7 @@ namespace WebApiTest.MSSQL
             foreach (var column in orderBy)
             {
                 orderByString += orderByString != String.Empty ? "," : "";
-                orderByString += (column.Key) + (column.Value == "Ascendant" ? " asc" : " desc");
+                orderByString += (column.Key) + (string .IsNullOrEmpty ( column.Value) ? " asc" : " "+ column.Value);
             }
 
             query = query.OrderBy(orderByString == string.Empty ? "AssetNumber asc" : orderByString);

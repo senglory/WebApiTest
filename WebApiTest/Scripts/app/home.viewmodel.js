@@ -28,12 +28,12 @@
                     "url": "api/Me2"
                 },
                 "columns": [
-                    { "title": "Bar Code", "data": "FIO", "searchable": true },
+                    { "title": "FIO", "data": "FIO", "searchable": true },
                     { "title": "AssetDate", "data": "AssetDate", "searchable": true },
                     { "title": "AssetNumber", "data": "AssetNumber", "searchable": true },
                     { "title": "OrgName", "data": "OrgName", "searchable": true },
-                    { "title": "Position", "data": "Position" },
-                    { "title": "EMail", "data": "EMail" }
+                    { "title": "Position", "data": "Position", "searchable": true },
+                    { "title": "EMail", "data": "EMail", "searchable": true }
                 ],
                 "lengthMenu": [[10, 25, 50, 100], [10, 25, 50, 100]],
             });
