@@ -1,0 +1,16 @@
+http://www.devcurry.com/2013/04/unobtrusive-jquery-validation-for.html
+http://www.dotnetcurry.com/aspnet-mvc/1138/knockoutjs-validation-aspnet-mvc-model
+https://github.com/devcurry/ko-template-unobtrusive-validation
+
+
+
+http://www.dotnetcurry.com/aspnet/942/sorting-pagination-grid-aspnet-webpai-knockoutjs
+
+
+http://www.codemag.com/article/1601031/CRUD-in-HTML-JavaScript-and-jQuery-Using-the-Web-API
+
+
+http://www.dotnetcurry.com/aspnet/1049/crud-database-aspnet-webapi-angularjs
+
+
+

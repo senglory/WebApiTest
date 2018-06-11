@@ -86,7 +86,20 @@
             function AssetViewModel(data) {
                 var self = this;
                 self.saveAsset = function () {
-                    alert('qqqqqqqqqq');
+                    if (self.isValid()) {
+                        var qq = self.AssetID;
+                        $.ajax({
+                            url: "http://localhost:59167/api/Update",
+                            type: "POST",
+                            data: ko.toJSON(self),
+                            datatype: "json",
+                            contentType: 'application/json'
+                        }).done(function (res) {
+                            //alert("Record Added Successfully" + res.EmpNo);
+                        }).error(function (err) {
+                            alert("Error " + err.status);
+                        });
+                    }
                 }
                 // knockout mapping JSON data to view model
                 ko.mapping.fromJS(data, {}, self);
@@ -97,14 +110,15 @@
                     url: "http://localhost:59167/api/Get?id=" + lnk.getAttribute("data-id"),
                     type: "GET"
                 })
-                    .done(function (data) {
-                        var vm = new AssetViewModel(data);
-                        ko.cleanNode(document.getElementById("myModal"));
-                        ko.applyBindings(vm, document.getElementById("myModal"));
-                        $('#myModal').modal({
-                            keyboard: true
-                        }, 'show');
-                    });
+                .done(function (data) {
+                    var vm = new AssetViewModel(data);
+                    ko.cleanNode(document.getElementById("myModal"));
+                    ko.validation.init({ messagesOnModified: false, errorClass: 'errorStyle', insertMessages: true });
+                    ko.applyBindings(vm, document.getElementById("myModal"));
+                    $('#myModal').modal({
+                        keyboard: true
+                    }, 'show');
+                });
 
             }
 
