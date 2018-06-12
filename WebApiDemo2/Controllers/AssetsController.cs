@@ -25,6 +25,14 @@ namespace WebApiDemo2.Controllers
             _dbContext = container.Resolve<IAppDbContext>();
         }
 
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                _dbContext.Dispose();
+            }
+            base.Dispose(disposing);
+        }
 
         [HttpGet]
         [Route("api/Get")]
@@ -34,9 +42,17 @@ namespace WebApiDemo2.Controllers
             return Json(res);
         }
 
+        [HttpGet]
+        [Route("api/Create")]
+        public IHttpActionResult Get()
+        {
+            var res = new Asset();
+            return Json(res);
+        }
+
         [HttpPost]
         [Route("api/Add")]
-        public IHttpActionResult Post([FromBody]Asset obj)
+        public IHttpActionResult Add([FromBody]Asset obj)
         {
             if (!ModelState.IsValid)
             {
@@ -48,7 +64,7 @@ namespace WebApiDemo2.Controllers
 
         [HttpPost]
         [Route("api/Update")]
-        public IHttpActionResult Put(int id, [FromBody]Asset obj)
+        public IHttpActionResult Update([FromBody]Asset obj)
         {
             if (!ModelState.IsValid)
             {

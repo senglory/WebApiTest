@@ -1,66 +1,4 @@
 ﻿<div class="row">
-    <div id='myModal' class='modal fade in'>
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div id='myModalContent'>
-                    <table class="table table-bordered table-condensed table-striped" id="tblemp">
-                        <tr>
-                            <td>FirstName</td>
-                            <td>
-                                <input type="text" id="FirstName" data-bind="value:FirstName" />
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>LastName</td>
-                            <td>
-                                <input type="text" id="LastName" data-bind="value:LastName" />
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>AssetDate</td>
-                            <td>
-                                <input type="date" id="AssetDate" data-bind="value:AssetDate" />
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>AssetNumber</td>
-                            <td>
-                                <input type="number" id="AssetNumber" data-bind="value:AssetNumber" />
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>OrgName</td>
-                            <td>
-                                <input type="text" id="OrgName" data-bind="value:OrgName" />
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>Position</td>
-                            <td>
-                                <input type="text" id="Position" data-bind="value:Position" />
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>EMail</td>
-                            <td>
-                                <input type="text" id="EMail" data-bind="value:EMail" />
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <input type="button" value="Save" id="save"
-                                       data-bind="click: saveAsset" class="btn btn-success" />
-                            </td>
-                            <td></td>
-                        </tr>
-                    </table>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div class="row">
 
     <div class="col-md-12">
         <div class="panel panel-primary list-panel" id="list-panel">
@@ -73,122 +11,272 @@
         </div>
 
     </div>
-
-    @section Scripts
-    {
-        <script type="text/javascript">
-
-            function doDelete(lnk) {
-
-            }
-
-
-            function AssetViewModel(data) {
-                var self = this;
-                self.saveAsset = function () {
-                    if (self.isValid()) {
-                        var qq = self.AssetID;
-                        $.ajax({
-                            url: "http://localhost:59167/api/Update",
-                            type: "POST",
-                            data: ko.toJSON(self),
-                            datatype: "json",
-                            contentType: 'application/json'
-                        }).done(function (res) {
-                            //alert("Record Added Successfully" + res.EmpNo);
-                        }).error(function (err) {
-                            alert("Error " + err.status);
-                        });
-                    }
-                }
-                // knockout mapping JSON data to view model
-                ko.mapping.fromJS(data, {}, self);
-            }
-
-            function doEdit(lnk) {
-                $.ajax({
-                    url: "http://localhost:59167/api/Get?id=" + lnk.getAttribute("data-id"),
-                    type: "GET"
-                })
-                .done(function (data) {
-                    var vm = new AssetViewModel(data);
-                    ko.cleanNode(document.getElementById("myModal"));
-                    ko.validation.init({ messagesOnModified: false, errorClass: 'errorStyle', insertMessages: true });
-                    ko.applyBindings(vm, document.getElementById("myModal"));
-                    $('#myModal').modal({
-                        keyboard: true
-                    }, 'show');
-                });
-
-            }
-
-            $(document).ready(function () {
-                var selected = [];
-                var table_companies = $('#assets-data-table').DataTable(
-                    {
-                        responsive: true,
-                        serverSide: true,
-                        processing: true,
-                        ajax: {
-                            url: "http://localhost:59167/api/GetResults",
-                            method: "POST"
-                        },
-                        columns: [
-                            { title: "FIO", "data": "FirstName", "searchable": true },
-                            { title: "AssetDate", "data": "AssetDate", "searchable": true },
-                            { title: "AssetNumber", "data": "AssetNumber", "searchable": true },
-                            { title: "OrgName", "data": "OrgName", "searchable": true },
-                            { title: "Position", "data": "Position", "searchable": true },
-                            { title: "EMail", "data": "EMail", "searchable": true },
-                                         /* EDIT */ {
-                                mRender: function (data, type, row) {
-                                    return '<a class="table-edit" data-id="' + row.AssetID + '" onclick="doEdit(this)">EDIT</a>'
-                                }
-                            },
-                                       /* DELETE */ {
-                                mRender: function (data, type, row) {
-                                    return '<a class="table-delete" data-id="' + row.AssetID + '" onclick="doDelete(this)">DELETE</a>'
-                                }
-                            }
-                        ],
-                        lengthMenu: [[10, 25, 50, 100], [10, 25, 50, 100]]
-                    });
-
-                // On page load: form validation
-                jQuery.validator.setDefaults({
-                    success: 'valid',
-                    rules: {
-                        fiscal_year: {
-                            required: true,
-                            min: 2000,
-                            max: 2025
-                        }
-                    },
-                    errorPlacement: function (error, element) {
-                        error.insertBefore(element);
-                    },
-                    highlight: function (element) {
-                        $(element).parent('.field_container').removeClass('valid').addClass('error');
-                    },
-                    unhighlight: function (element) {
-                        $(element).parent('.field_container').addClass('valid').removeClass('error');
-                    }
-                });
-            });
-
-        </script>
-    }
-
-
 </div>
 <div class="row">
     <div class="col-sm-6">
         <button type="button" id="addButton"
                 class="btn btn-primary"
-                onclick="addClick();">
+                onclick="doAdd();">
+            <span class="glyphicon glyphicon-save" aria-hidden="true"></span>
             Add Asset
         </button>
     </div>
 </div>
+<div class="row">
+    <div id='myModal' class='modal fade in' data-bind="validationOptions: validationOptions">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div id='myModalContent'>
+                    <div class="panel-body">
+                        <div class="form-group">
+                            <label for="FirstName">FirstName</label>
+                            <input type="text" id="FirstName" class="form-control" data-bind="value: product.FirstName" />
+                        </div>
+                        <div class="form-group">
+                            <label for="FirstName">LastName</label>
+                            <input type="text" id="LastName" class="form-control" data-bind="value: product.LastName" />
+                        </div>
+                        <div class="form-group">
+                            <label for="FirstName">AssetDate</label>
+                            <input type="date" id="AssetDate" class="form-control" data-bind="value: product.AssetDate" data-date="" data-date-format="YYYY-MM-DD" />
+                        </div>
+                        <div class="form-group">
+                            <label for="FirstName">AssetNumber</label>
+                            <input type="number" id="AssetNumber" class="form-control" data-bind="value: product.AssetNumber" />
+                        </div>
+                        <div class="form-group">
+                            <label for="FirstName">OrgName</label>
+                            <input type="text" id="OrgName" class="form-control" data-bind="value: product.OrgName" />
+                        </div>
+                        <div class="form-group">
+                            <label for="FirstName">Position</label>
+                            <input type="text" id="Position" class="form-control" data-bind="value: product.Position" />
+                        </div>
+                        <div class="form-group">
+                            <label for="FirstName">EMail</label>
+                            <input type="email" id="EMail" class="form-control" data-bind="value: product.EMail" />
+                        </div>
+                        <button type="button" class="btn btn-primary" data-bind="click: saveAsset, enable: canSave">
+                            <span class="glyphicon glyphicon-save" aria-hidden="true"></span>Save
+                        </button>
+                        <ul id="errors" class="error-message" data-bind="foreach: generalErrors">
+                            <li><span data-bind="text: $data"></span></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
 
+@section Scripts
+{
+    <script type="text/javascript">
+
+        ko.observable.fn.appendError = function (error) {
+            var thisError = this.error();
+            if (thisError) {
+                this.setError(thisError += '. ' + error);
+            }
+            else {
+                this.setError(error)
+            };
+        };
+
+
+            var AssetViewModel = function (data) {
+                var self = this;
+
+                self.saveAsset = function () {
+                    var theUrl = location.origin +"/api/Update";
+                    if (self.errors().length == 0) {
+                        self.isSaving(true);
+                        $.ajax({
+                            url: theUrl,
+                            type: "POST",
+                            data: ko.toJSON(self.product),
+                            dataType: 'json',
+                            contentType: 'application/json; charset=utf-8',
+                            success: function (data) {
+                                self.isSaving(false);
+                                location.reload(true);
+                            },
+                            statusCode: {
+                                400: function (data) {
+                                    if (typeof data.responseJSON.modelState !== 'undefined') {
+                                        $.each(data.responseJSON.modelState, function (key, errors) {
+                                            $.each(errors, function (index, error) {
+                                                switch (key) {
+                                                    case 'obj.FirstName':
+                                                        self.product.FirstName.appendError(error);
+                                                        break;
+                                                    case 'obj.LastName':
+                                                        self.product.LastName.appendError(error);
+                                                        break;
+                                                    case 'obj.EMail':
+                                                        self.product.EMail.appendError(error);
+                                                        break;
+                                                    default:
+                                                        self.generalErrors.push(error);
+                                                        break;
+                                                };
+                                            });
+                                        });
+                                    }
+                                    else {
+                                        self.generalErrors.push(data.responseJSON.message);
+                                    };
+                                },
+                                500: function (data) {
+                                    self.generalErrors.push(data.statusText + '. Please try again.');
+                                }
+                            }
+                        });
+                    }
+                    else {
+                        self.errors.showAllMessages(true);
+                    }
+
+                }
+
+
+                self.product = {
+                    FirstName: ko.observable(data.FirstName).extend({
+                        required: true
+                    }),
+                    LastName: ko.observable(data.LastName).extend({
+                        required: true
+                    }),
+                    AssetDate: ko.observable(data.AssetDate).extend({
+                        required: true
+                    }),
+                    AssetNumber: ko.observable(data.AssetNumber).extend({
+                        required: true
+                    }),
+                    OrgName: ko.observable(data.OrgName).extend({
+                        required: true
+                    }),
+                    Position: ko.observable(data.Position).extend({
+                        required: true
+                    }),
+                    EMail: ko.observable(data.EMail).extend({
+                        required: true,
+                        email: true
+                    })
+                }
+                self.errors = ko.validation.group(self.product);
+
+                self.generalErrors = ko.observableArray([]);
+
+                self.validationOptions = {
+                    decorateInputElement: true,
+                    errorElementClass: 'error-element',
+                    errorMessageClass: 'error-message'
+                };
+                self.isSaving = ko.observable(false);
+
+                self.isValid = ko.computed(function () {
+                    return self.errors().length == 0;
+                });
+
+                self.canSave = ko.computed(function () {
+                    return self.isValid() && !self.isSaving();
+                });
+
+                //var m = ko.mapping.fromJS(data, {}, self);
+                //var m2 = ko.validatedObservable(m, validationMapping);
+                var m2 = self;
+                return m2;
+            }
+
+
+        function doDelete(lnk) {
+            $.ajax({
+                url: location.origin + "/api/Delete?id=" + lnk.getAttribute("data-id"),
+                type: "POST"
+            })
+            .done(function (data) {
+                location.reload(true);
+            });
+        }
+
+        function doAdd() {
+            ko.validation.init();
+            $.ajax({
+                url: location.origin +"/api/Create",
+                type: "GET"
+            })
+            .done(function (data) {
+                ko.cleanNode(document.getElementById("myModal"));
+                var vm = new AssetViewModel(data);
+                ko.applyBindingsWithValidation(vm, document.getElementById("myModal"));
+
+                var propBooleanlValid = vm.errors(vm.product, { deep: false });
+                propBooleanlValid.showAllMessages(false);
+                vm.errors.showAllMessages(false);
+                $('#myModal').modal({
+                    keyboard: true
+                }, 'show');
+            });
+        }
+
+
+
+        function doEdit(lnk) {
+            ko.validation.init();
+            $.ajax({
+                url: location.origin +"/api/Get?id=" + lnk.getAttribute("data-id"),
+                type: "GET"
+            })
+            .done(function (data) {
+                ko.cleanNode(document.getElementById("myModal"));
+                var vm = new AssetViewModel(data);
+
+                ko.applyBindings(vm, document.getElementById("myModal"));
+
+//                var propBooleanlValid = vm.errors(vm.product, { deep: false });
+//                propBooleanlValid.showAllMessages(false);
+                vm.errors = ko.validation.group(vm.product);
+                vm.errors.showAllMessages(false);
+                $('#myModal').modal({
+                    keyboard: true
+                }, 'show');
+            });
+        }
+
+        $(document).ready(function () {
+
+            var table_assets = $('#assets-data-table').DataTable(
+                {
+                    responsive: true,
+                    serverSide: true,
+                    processing: true,
+                    ajax: {
+                        url: location.origin +"/api/GetResults",
+                        method: "POST"
+                    },
+                    columns: [
+                        { title: "FIO", "data": "FirstName", "searchable": true },
+                        { title: "AssetDate", "data": "AssetDate", "searchable": true },
+                        { title: "AssetNumber", "data": "AssetNumber", "searchable": true },
+                        { title: "OrgName", "data": "OrgName", "searchable": true },
+                        { title: "Position", "data": "Position", "searchable": true },
+                        { title: "EMail", "data": "EMail", "searchable": true },
+                        {
+                            mRender: function (data, type, row) {
+                                return '<a class="table-edit" data-id="' + row.AssetID + '" onclick="doEdit(this)">EDIT</a>'
+                            }
+                        },
+                        {
+                            mRender: function (data, type, row) {
+                                return '<a class="table-del" data-id="' + row.AssetID + '" onclick="doDelete(this)">DELETE</a>'
+                            }
+                        }
+                    ],
+                    lengthMenu: [[10, 25, 50, 100], [10, 25, 50, 100]]
+                });
+        });
+
+    </script>
+}

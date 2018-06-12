@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace WebApiTest.Interfaces
 {
-    public interface IAppDbContext
+    public interface IAppDbContext : IDisposable
     {
         int GetTotalCount();
         QueryResult GetResults(string filterByValue, int start, int length, Dictionary<string, string> orderBy);

@@ -2,6 +2,10 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
+using Newtonsoft.Json;
+
+
+
 namespace WebApiTest.Interfaces
 {
     public class Asset
@@ -17,6 +21,7 @@ namespace WebApiTest.Interfaces
         public string LastName { get; set; }
 
         [Required]
+        [JsonConverter(typeof(CustomDateTimeConverter))]
         public DateTime AssetDate { get; set; }
 
         [Required]

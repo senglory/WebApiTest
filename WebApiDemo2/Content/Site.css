@@ -16,16 +16,9 @@ textarea {
     max-width: 280px;
 }
 
-.errorStyle {
-    border: 2px solid red;
-    background-color: #fdd;
+.table-edit, .table-del {
+    cursor: pointer;
 }
-
-
-
-
-
-
 /* Lightbox ------------------------------------------------------------------------------------- */
 .lightbox_bg {
     display: none;
@@ -365,4 +358,28 @@ textarea {
         -webkit-transform: rotate(359deg);
         transform: rotate(359deg);
     }
+}
+
+
+
+
+
+
+
+
+.error-message {
+    color: red;
+}
+
+.error-element {
+    border-color: red;
+}
+
+#errors {
+    padding-left: 0;
+    padding-top: 5px;
+}
+
+#errors li {
+    list-style-type: none;
 }

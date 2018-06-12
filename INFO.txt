@@ -1,5 +1,9 @@
 http://www.devcurry.com/2013/04/unobtrusive-jquery-validation-for.html
 http://www.dotnetcurry.com/aspnet-mvc/1138/knockoutjs-validation-aspnet-mvc-model
+
+https://datatellblog.wordpress.com/2015/06/26/client-and-server-validation-with-web-api-and-knockout/
+https://github.com/RossWhitehead/ServerValidationKnockout
+
 https://github.com/devcurry/ko-template-unobtrusive-validation
 
 
@@ -14,3 +18,4 @@ http://www.dotnetcurry.com/aspnet/1049/crud-database-aspnet-webapi-angularjs
 
 
 
+https://stackoverflow.com/questions/18635599/specifying-a-custom-datetime-format-when-serializing-with-json-net
