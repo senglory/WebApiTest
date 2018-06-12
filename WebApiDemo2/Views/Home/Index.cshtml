@@ -59,6 +59,7 @@
                         <button type="button" class="btn btn-primary" data-bind="click: saveAsset, enable: canSave">
                             <span class="glyphicon glyphicon-save" aria-hidden="true"></span>Save
                         </button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                         <ul id="errors" class="error-message" data-bind="foreach: generalErrors">
                             <li><span data-bind="text: $data"></span></li>
                         </ul>
@@ -142,27 +143,28 @@
 
 
                 self.product = {
+                    AssetID: ko.observable(data.AssetID),
                     FirstName: ko.observable(data.FirstName).extend({
-                        required: true
+                        required: true, validatable: true
                     }),
                     LastName: ko.observable(data.LastName).extend({
-                        required: true
+                        required: true, validatable: true
                     }),
                     AssetDate: ko.observable(data.AssetDate).extend({
-                        required: true
+                        required: true, validatable: true
                     }),
                     AssetNumber: ko.observable(data.AssetNumber).extend({
-                        required: true
+                        required: true, validatable: true
                     }),
                     OrgName: ko.observable(data.OrgName).extend({
-                        required: true
+                        required: true, validatable: true
                     }),
                     Position: ko.observable(data.Position).extend({
-                        required: true
+                        required: true, validatable: true
                     }),
                     EMail: ko.observable(data.EMail).extend({
                         required: true,
-                        email: true
+                        email: true, validatable: true
                     })
                 }
                 self.errors = ko.validation.group(self.product);
@@ -212,8 +214,8 @@
                 var vm = new AssetViewModel(data);
                 ko.applyBindingsWithValidation(vm, document.getElementById("myModal"));
 
-                var propBooleanlValid = vm.errors(vm.product, { deep: false });
-                propBooleanlValid.showAllMessages(false);
+                //var propBooleanlValid = vm.errors(vm.product, { deep: false });
+                //propBooleanlValid.showAllMessages(false);
                 vm.errors.showAllMessages(false);
                 $('#myModal').modal({
                     keyboard: true
@@ -224,7 +226,7 @@
 
 
         function doEdit(lnk) {
-            ko.validation.init();
+            //ko.validation.init();
             $.ajax({
                 url: location.origin +"/api/Get?id=" + lnk.getAttribute("data-id"),
                 type: "GET"
@@ -237,11 +239,14 @@
 
 //                var propBooleanlValid = vm.errors(vm.product, { deep: false });
 //                propBooleanlValid.showAllMessages(false);
-                vm.errors = ko.validation.group(vm.product);
+                //vm.errors = ko.validation.group(vm.product);
                 vm.errors.showAllMessages(false);
                 $('#myModal').modal({
                     keyboard: true
                 }, 'show');
+                $('#myModal').on('shown.bs.modal', function () {
+                    $('#FirstName').trigger('focus')
+                })
             });
         }
 
@@ -257,7 +262,8 @@
                         method: "POST"
                     },
                     columns: [
-                        { title: "FIO", "data": "FirstName", "searchable": true },
+                        { title: "FirstName", "data": "FirstName", "searchable": true },
+                        { title: "LastName", "data": "LastName", "searchable": true },
                         { title: "AssetDate", "data": "AssetDate", "searchable": true },
                         { title: "AssetNumber", "data": "AssetNumber", "searchable": true },
                         { title: "OrgName", "data": "OrgName", "searchable": true },

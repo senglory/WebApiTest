@@ -12,27 +12,27 @@ namespace WebApiTest.Interfaces
     {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Key]
-        public System.Guid AssetID { get; set; }
+        public virtual System.Guid AssetID { get; set; }
 
         [Required]
-        public string FirstName { get; set; }
+        public virtual string FirstName { get; set; }
 
         [Required]
-        public string LastName { get; set; }
+        public virtual string LastName { get; set; }
 
         [Required]
         [JsonConverter(typeof(CustomDateTimeConverter))]
-        public DateTime AssetDate { get; set; }
+        public virtual DateTime AssetDate { get; set; }
 
         [Required]
-        public string AssetNumber { get; set; }
+        public virtual string AssetNumber { get; set; }
 
         [Required]
-        public string OrgName { get; set; }
+        public virtual string OrgName { get; set; }
         [Required]
-        public string Position { get; set; }
+        public virtual string Position { get; set; }
         [Required]
         [EmailAddress(ErrorMessage = "Invalid Email Address")]
-        public string EMail { get; set; }
+        public virtual string EMail { get; set; }
     }
 }
