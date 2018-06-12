@@ -142,7 +142,8 @@
                 }
 
 
-                self.product = {
+                self.product = 
+                    {
                     AssetID: ko.observable(data.AssetID),
                     FirstName: ko.observable(data.FirstName).extend({
                         required: true, validatable: true
@@ -167,11 +168,15 @@
                         email: true, validatable: true
                     })
                 }
+                
                 self.errors = ko.validation.group(self.product);
 
                 self.generalErrors = ko.observableArray([]);
 
                 self.validationOptions = {
+                    //insertMessages: false,
+                    //messagesOnModified: false,
+                    writeInputAttributes: true,
                     decorateInputElement: true,
                     errorElementClass: 'error-element',
                     errorMessageClass: 'error-message'
@@ -212,10 +217,9 @@
             .done(function (data) {
                 ko.cleanNode(document.getElementById("myModal"));
                 var vm = new AssetViewModel(data);
-                ko.applyBindingsWithValidation(vm, document.getElementById("myModal"));
-
-                //var propBooleanlValid = vm.errors(vm.product, { deep: false });
-                //propBooleanlValid.showAllMessages(false);
+                ko.applyBindings(vm, document.getElementById("myModal"));
+                // trick for hiding previous error SPANS
+                $('span.error-message').hide();
                 vm.errors.showAllMessages(false);
                 $('#myModal').modal({
                     keyboard: true
@@ -226,7 +230,7 @@
 
 
         function doEdit(lnk) {
-            //ko.validation.init();
+            ko.validation.init();
             $.ajax({
                 url: location.origin +"/api/Get?id=" + lnk.getAttribute("data-id"),
                 type: "GET"
@@ -234,12 +238,9 @@
             .done(function (data) {
                 ko.cleanNode(document.getElementById("myModal"));
                 var vm = new AssetViewModel(data);
-
                 ko.applyBindings(vm, document.getElementById("myModal"));
-
-//                var propBooleanlValid = vm.errors(vm.product, { deep: false });
-//                propBooleanlValid.showAllMessages(false);
-                //vm.errors = ko.validation.group(vm.product);
+                // trick for hiding previous error SPANS
+                $('span.error-message').hide();
                 vm.errors.showAllMessages(false);
                 $('#myModal').modal({
                     keyboard: true
