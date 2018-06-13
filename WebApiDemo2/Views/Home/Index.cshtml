@@ -23,38 +23,38 @@
     </div>
 </div>
 <div class="row">
-    <div id='myModal' class='modal fade in' data-bind="validationOptions: validationOptions">
-        <div class="modal-dialog">
+    <div id='myModal' class='modal fade in' tabindex="-1" role="dialog" data-bind="validationOptions: validationOptions">
+        <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div id='myModalContent'>
                     <div class="panel-body">
                         <div class="form-group">
                             <label for="FirstName">FirstName</label>
-                            <input type="text" id="FirstName" class="form-control" data-bind="value: product.FirstName" />
+                            <input type="text" id="FirstName" class="form-control" data-bind="value: Asset.FirstName" />
                         </div>
                         <div class="form-group">
                             <label for="FirstName">LastName</label>
-                            <input type="text" id="LastName" class="form-control" data-bind="value: product.LastName" />
+                            <input type="text" id="LastName" class="form-control" data-bind="value: Asset.LastName" />
                         </div>
                         <div class="form-group">
                             <label for="FirstName">AssetDate</label>
-                            <input type="date" id="AssetDate" class="form-control" data-bind="value: product.AssetDate" data-date="" data-date-format="YYYY-MM-DD" />
+                            <input type="date" id="AssetDate" class="form-control" data-bind="value: Asset.AssetDate" data-date="" data-date-format="YYYY-MM-DD" />
                         </div>
                         <div class="form-group">
                             <label for="FirstName">AssetNumber</label>
-                            <input type="number" id="AssetNumber" class="form-control" data-bind="value: product.AssetNumber" />
+                            <input type="number" id="AssetNumber" class="form-control" data-bind="value: Asset.AssetNumber" />
                         </div>
                         <div class="form-group">
                             <label for="FirstName">OrgName</label>
-                            <input type="text" id="OrgName" class="form-control" data-bind="value: product.OrgName" />
+                            <input type="text" id="OrgName" class="form-control" data-bind="value: Asset.OrgName" />
                         </div>
                         <div class="form-group">
                             <label for="FirstName">Position</label>
-                            <input type="text" id="Position" class="form-control" data-bind="value: product.Position" />
+                            <input type="text" id="Position" class="form-control" data-bind="value: Asset.Position" />
                         </div>
                         <div class="form-group">
                             <label for="FirstName">EMail</label>
-                            <input type="email" id="EMail" class="form-control" data-bind="value: product.EMail" />
+                            <input type="email" id="EMail" class="form-control" data-bind="value: Asset.EMail" />
                         </div>
                         <button type="button" class="btn btn-primary" data-bind="click: saveAsset, enable: canSave">
                             <span class="glyphicon glyphicon-save" aria-hidden="true"></span>Save
@@ -86,116 +86,120 @@
         };
 
 
-            var AssetViewModel = function (data) {
-                var self = this;
+        var AssetViewModel = function (data) {
+            var self = this;
 
-                self.saveAsset = function () {
-                    var theUrl = location.origin +"/api/Update";
-                    if (self.errors().length == 0) {
-                        self.isSaving(true);
-                        $.ajax({
-                            url: theUrl,
-                            type: "POST",
-                            data: ko.toJSON(self.product),
-                            dataType: 'json',
-                            contentType: 'application/json; charset=utf-8',
-                            success: function (data) {
-                                self.isSaving(false);
-                                location.reload(true);
-                            },
-                            statusCode: {
-                                400: function (data) {
-                                    if (typeof data.responseJSON.modelState !== 'undefined') {
-                                        $.each(data.responseJSON.modelState, function (key, errors) {
-                                            $.each(errors, function (index, error) {
-                                                switch (key) {
-                                                    case 'obj.FirstName':
-                                                        self.product.FirstName.appendError(error);
-                                                        break;
-                                                    case 'obj.LastName':
-                                                        self.product.LastName.appendError(error);
-                                                        break;
-                                                    case 'obj.EMail':
-                                                        self.product.EMail.appendError(error);
-                                                        break;
-                                                    default:
-                                                        self.generalErrors.push(error);
-                                                        break;
-                                                };
-                                            });
+            self.saveAsset = function () {
+                var theUrl = "";
+                if (self.Asset.AssetID() == "" || self.Asset.AssetID() == "00000000-0000-0000-0000-000000000000")
+                    theUrl = location.origin + "/api/Add";
+                else
+                    theUrl = location.origin +"/api/Update";
+                if (self.errors().length == 0) {
+                    self.isSaving(true);
+                    $.ajax({
+                        url: theUrl,
+                        type: "POST",
+                        data: ko.toJSON(self.Asset),
+                        dataType: 'json',
+                        contentType: 'application/json; charset=utf-8',
+                        success: function (data) {
+                            self.isSaving(false);
+                            location.reload(true);
+                        },
+                        statusCode: {
+                            400: function (data) {
+                                if (typeof data.responseJSON.modelState !== 'undefined') {
+                                    $.each(data.responseJSON.modelState, function (key, errors) {
+                                        $.each(errors, function (index, error) {
+                                            switch (key) {
+                                                case 'obj.FirstName':
+                                                    self.Asset.FirstName.appendError(error);
+                                                    break;
+                                                case 'obj.LastName':
+                                                    self.Asset.LastName.appendError(error);
+                                                    break;
+                                                case 'obj.EMail':
+                                                    self.Asset.EMail.appendError(error);
+                                                    break;
+                                                default:
+                                                    self.generalErrors.push(error);
+                                                    break;
+                                            };
                                         });
-                                    }
-                                    else {
-                                        self.generalErrors.push(data.responseJSON.message);
-                                    };
-                                },
-                                500: function (data) {
-                                    self.generalErrors.push(data.statusText + '. Please try again.');
+                                    });
                                 }
+                                else {
+                                    self.generalErrors.push(data.responseJSON.message);
+                                };
+                            },
+                            500: function (data) {
+                                self.generalErrors.push(data.statusText + '. Please try again.');
                             }
-                        });
-                    }
-                    else {
-                        self.errors.showAllMessages(true);
-                    }
-
+                        }
+                    });
+                }
+                else {
+                    self.errors.showAllMessages(true);
                 }
 
-
-                self.product = 
-                    {
-                    AssetID: ko.observable(data.AssetID),
-                    FirstName: ko.observable(data.FirstName).extend({
-                        required: true, validatable: true
-                    }),
-                    LastName: ko.observable(data.LastName).extend({
-                        required: true, validatable: true
-                    }),
-                    AssetDate: ko.observable(data.AssetDate).extend({
-                        required: true, validatable: true
-                    }),
-                    AssetNumber: ko.observable(data.AssetNumber).extend({
-                        required: true, validatable: true
-                    }),
-                    OrgName: ko.observable(data.OrgName).extend({
-                        required: true, validatable: true
-                    }),
-                    Position: ko.observable(data.Position).extend({
-                        required: true, validatable: true
-                    }),
-                    EMail: ko.observable(data.EMail).extend({
-                        required: true,
-                        email: true, validatable: true
-                    })
-                }
-                
-                self.errors = ko.validation.group(self.product);
-
-                self.generalErrors = ko.observableArray([]);
-
-                self.validationOptions = {
-                    //insertMessages: false,
-                    //messagesOnModified: false,
-                    writeInputAttributes: true,
-                    decorateInputElement: true,
-                    errorElementClass: 'error-element',
-                    errorMessageClass: 'error-message'
-                };
-                self.isSaving = ko.observable(false);
-
-                self.isValid = ko.computed(function () {
-                    return self.errors().length == 0;
-                });
-
-                self.canSave = ko.computed(function () {
-                    return self.isValid() && !self.isSaving();
-                });
-
-                //var m = ko.mapping.fromJS(data, {}, self);
-                //var m2 = ko.validatedObservable(m, validationMapping);
-                var m2 = self;
-                return m2;
             }
+
+
+            self.Asset = 
+            {
+                AssetID: ko.observable(data.AssetID),
+                FirstName: ko.observable(data.FirstName).extend({
+                    required: true, validatable: true
+                }),
+                LastName: ko.observable(data.LastName).extend({
+                    required: true, validatable: true
+                }),
+                AssetDate: ko.observable(data.AssetDate).extend({
+                    required: true, validatable: true
+                }),
+                AssetNumber: ko.observable(data.AssetNumber).extend({
+                    required: true, validatable: true
+                }),
+                OrgName: ko.observable(data.OrgName).extend({
+                    required: true, validatable: true
+                }),
+                Position: ko.observable(data.Position).extend({
+                    required: true, validatable: true
+                }),
+                EMail: ko.observable(data.EMail).extend({
+                    required: true,
+                    email: true, validatable: true
+                })
+            }
+                
+            self.errors = ko.validation.group(self.Asset);
+
+            self.generalErrors = ko.observableArray([]);
+
+            self.validationOptions = {
+                //insertMessages: false,
+                //messagesOnModified: false,
+                writeInputAttributes: true,
+                decorateInputElement: true,
+                errorElementClass: 'error-element',
+                errorMessageClass: 'error-message'
+            };
+            self.isSaving = ko.observable(false);
+
+            self.isValid = ko.computed(function () {
+                return self.errors().length == 0;
+            });
+
+            self.canSave = ko.computed(function () {
+                return self.isValid() && !self.isSaving();
+            });
+
+            //var m = ko.mapping.fromJS(data, {}, self);
+            //var m2 = ko.validatedObservable(m, validationMapping);
+            var m2 = self;
+            return m2;
+        }
 
 
         function doDelete(lnk) {
@@ -208,10 +212,10 @@
             });
         }
 
-        function doAdd() {
-            ko.validation.init();
+        function openAddEditDlg(theUrl) {
+            //ko.validation.init();
             $.ajax({
-                url: location.origin +"/api/Create",
+                url: theUrl,
                 type: "GET"
             })
             .done(function (data) {
@@ -221,34 +225,25 @@
                 // trick for hiding previous error SPANS
                 $('span.error-message').hide();
                 vm.errors.showAllMessages(false);
+                $('#myModal .btn-primary').on('click', function () {
+                    $('#myModal').modal('hide');
+                    location.reload(true);
+                });
+                $('#myModal').on('shown.bs.modal', function () {
+                    $('#FirstName').trigger('focus')
+                });
                 $('#myModal').modal({
                     keyboard: true
                 }, 'show');
             });
         }
 
-
+        function doAdd() {
+            openAddEditDlg(location.origin + "/api/Create");
+        }
 
         function doEdit(lnk) {
-            ko.validation.init();
-            $.ajax({
-                url: location.origin +"/api/Get?id=" + lnk.getAttribute("data-id"),
-                type: "GET"
-            })
-            .done(function (data) {
-                ko.cleanNode(document.getElementById("myModal"));
-                var vm = new AssetViewModel(data);
-                ko.applyBindings(vm, document.getElementById("myModal"));
-                // trick for hiding previous error SPANS
-                $('span.error-message').hide();
-                vm.errors.showAllMessages(false);
-                $('#myModal').modal({
-                    keyboard: true
-                }, 'show');
-                $('#myModal').on('shown.bs.modal', function () {
-                    $('#FirstName').trigger('focus')
-                })
-            });
+            openAddEditDlg(location.origin + "/api/Get?id=" + lnk.getAttribute("data-id"));
         }
 
         $(document).ready(function () {

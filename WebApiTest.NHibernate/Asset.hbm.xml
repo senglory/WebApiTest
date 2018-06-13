@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" auto-import="true" assembly=" WebApiTest.Interfaces" namespace=" WebApiTest.Interfaces">
+  <class name="Asset" table="Asset" dynamic-update="true" >
+    <cache usage="read-write"/>
+    <id name="AssetID" column="AssetID" type="guid">
+      <generator class="guid" />
+    </id>
+    <property name="FirstName" />
+    <property name="LastName" />
+    <property name="AssetDate" />
+    <property name="AssetNumber" />
+    <property name="OrgName" />
+    <property name="Position" />
+    <property name="EMail" />
+  </class>
+</hibernate-mapping>

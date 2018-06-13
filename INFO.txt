@@ -19,3 +19,7 @@ http://www.dotnetcurry.com/aspnet/1049/crud-database-aspnet-webapi-angularjs
 
 
 https://stackoverflow.com/questions/18635599/specifying-a-custom-datetime-format-when-serializing-with-json-net
+
+
+https://www.codeproject.com/Articles/1178251/NHibernate-Introduction-configuration-CRUD-with-MV
+
