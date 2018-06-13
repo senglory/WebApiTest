@@ -500,6 +500,10 @@
       <Project>{4f2582ba-1156-46ff-80d0-203c242acb97}</Project>
       <Name>WebApiTest.Interfaces</Name>
     </ProjectReference>
+    <ProjectReference Include="..\WebApiTest.Moq\WebApiTest.Moq.csproj">
+      <Project>{8904f094-9139-46cb-84a0-4e47e4715131}</Project>
+      <Name>WebApiTest.Moq</Name>
+    </ProjectReference>
     <ProjectReference Include="..\WebApiTest.MSSQL\WebApiTest.MSSQL.csproj">
       <Project>{71caa80d-8e9f-4b66-b6b4-9ce8937bd016}</Project>
       <Name>WebApiTest.MSSQL</Name>
