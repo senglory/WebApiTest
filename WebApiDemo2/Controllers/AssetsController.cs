@@ -34,25 +34,22 @@ namespace WebApiDemo2.Controllers
             base.Dispose(disposing);
         }
 
-        [HttpGet]
-        [Route("api/Get")]
+        [Route("api/assets/{id?}")]
         public IHttpActionResult Get(Guid id)
         {
             var res = _dbContext.FindById(id);
             return Json(res);
         }
 
-        [HttpGet]
-        [Route("api/Create")]
+        [Route("api/assets")]
         public IHttpActionResult Get()
         {
             var res = new Asset();
             return Json(res);
         }
 
-        [HttpPost]
-        [Route("api/Add")]
-        public IHttpActionResult Add([FromBody]Asset obj)
+        [Route("api/assets")]
+        public IHttpActionResult Post([FromBody]Asset obj)
         {
             if (!ModelState.IsValid)
             {
@@ -62,9 +59,8 @@ namespace WebApiDemo2.Controllers
             return Json(res);
         }
 
-        [HttpPost]
-        [Route("api/Update")]
-        public IHttpActionResult Update([FromBody]Asset obj)
+        [Route("api/assets")]
+        public IHttpActionResult Put([FromBody]Asset obj)
         {
             if (!ModelState.IsValid)
             {
@@ -74,8 +70,7 @@ namespace WebApiDemo2.Controllers
             return Ok();
         }
 
-        [HttpPost]
-        [Route("api/Delete")]
+        [Route("api/assets/{id?}")]
         public IHttpActionResult Delete(Guid id)
         {
             _dbContext.Delete(id);
@@ -83,9 +78,8 @@ namespace WebApiDemo2.Controllers
         }
 
 
-        [HttpPost]
-        [Route("api/GetResults")]
-        public IHttpActionResult GetResults([FromBody]DataTableRequest requestModel)
+        [Route("api/assets-filter")]
+        public IHttpActionResult Post([FromBody]DataTableRequest requestModel)
         {
             var orderBy = new Dictionary<string, string>();
             var sortedColumns = requestModel.Order;

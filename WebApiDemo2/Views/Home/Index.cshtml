@@ -91,15 +91,18 @@
 
             self.saveAsset = function () {
                 var theUrl = "";
+                var doAdd = false;
                 if (self.Asset.AssetID() == "" || self.Asset.AssetID() == "00000000-0000-0000-0000-000000000000")
-                    theUrl = location.origin + "/api/Add";
-                else
-                    theUrl = location.origin +"/api/Update";
+                    doAdd = true;
+                var rt = "PUT";
+                if (doAdd)
+                    rt = "POST";
+                theUrl = location.origin +"/api/assets";
                 if (self.errors().length == 0) {
                     self.isSaving(true);
                     $.ajax({
                         url: theUrl,
-                        type: "POST",
+                        type: rt,
                         data: ko.toJSON(self.Asset),
                         dataType: 'json',
                         contentType: 'application/json; charset=utf-8',
@@ -204,16 +207,19 @@
 
         function doDelete(lnk) {
             $.ajax({
-                url: location.origin + "/api/Delete?id=" + lnk.getAttribute("data-id"),
-                type: "POST"
+                url: location.origin + "/api/assets/" + lnk.getAttribute("data-id"),
+                type: "DELETE"
             })
             .done(function (data) {
                 location.reload(true);
             });
         }
 
-        function openAddEditDlg(theUrl) {
+        function openAddEditDlg(theUrl, doEdit) {
             //ko.validation.init();
+            var rt = "GET";
+            //if (doEdit)
+            //    rt = "PUT";
             $.ajax({
                 url: theUrl,
                 type: "GET"
@@ -239,11 +245,11 @@
         }
 
         function doAdd() {
-            openAddEditDlg(location.origin + "/api/Create");
+            openAddEditDlg(location.origin + "/api/assets");
         }
 
         function doEdit(lnk) {
-            openAddEditDlg(location.origin + "/api/Get?id=" + lnk.getAttribute("data-id"));
+            openAddEditDlg(location.origin + "/api/assets/" + lnk.getAttribute("data-id"), true);
         }
 
         $(document).ready(function () {
@@ -254,7 +260,7 @@
                     serverSide: true,
                     processing: true,
                     ajax: {
-                        url: location.origin +"/api/GetResults",
+                        url: location.origin +"/api/assets-filter",
                         method: "POST"
                     },
                     columns: [
